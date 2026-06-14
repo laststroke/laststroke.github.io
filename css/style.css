@@ -1696,17 +1696,38 @@ body {
 
 /* ----- МОДАЛЬНЫЕ ОКНА ----- */
 .auth-modal,
-.cart-panel,
-.favorites-panel,
 .checkout-modal {
     position: fixed;
     z-index: 3000;
     display: none;
 }
+
 .auth-modal.active,
-.cart-panel.active,
-.favorites-panel.active,
 .checkout-modal.active {
+    display: flex;
+}
+
+/* КОРЗИНА И ИЗБРАННОЕ - ПРАВИЛЬНЫЕ СТИЛИ */
+.cart-panel,
+.favorites-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 380px;
+    max-width: 85%;
+    height: 100vh;
+    background: var(--bg-primary);
+    transition: right 0.3s ease;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 3001;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+}
+
+.cart-panel.active,
+.favorites-panel.active {
+    right: 0;
     display: flex;
 }
 .auth-modal,
@@ -1716,19 +1737,7 @@ body {
     align-items: center;
     justify-content: center;
 }
-.cart-panel,
-.favorites-panel {
-    top: 0;
-    right: -100% !important;
-    width: 320px !important;
-    max-width: 85% !important;
-    height: 100vh;
-    background: var(--bg-primary);
-    transition: right 0.3s ease;
-    border-left: 1px solid var(--border);
-    flex-direction: column;
-    z-index: 3001;
-}
+
 .cart-panel.active,
 .favorites-panel.active {
     right: 0;
@@ -3307,21 +3316,5 @@ body {
 
 
 
-/* ===== МОБИЛЬНЫЕ - КАРТИНКА СВЕРХУ ===== */
-@media (max-width: 768px) {
-    .product-detail {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-    
-    .product-main-image img {
-        object-fit: contain !important;
-        position: static !important;
-    }
-}
 
 
-/* ===== ФИКС ПОИСКА ===== */
-.header-search {
-    transition: all 0.1s ease;
-}
