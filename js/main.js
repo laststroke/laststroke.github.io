@@ -621,7 +621,7 @@ function renderServicesPage() {
                     <h2>${escapeHtml(s.name)}</h2>
                     <p>${escapeHtml(s.description)}</p>
                     <ul>${featuresHtml}</ul>
-                    <div class="price-info">${escapeHtml(s.price)}</div>
+                    <div class="price-info">${escapeHtml(s.price)} &#8381;</div>
                     <button class="service-order-btn" data-service-id="${s.id}" onclick="event.stopPropagation();">
                         ${escapeHtml(s.orderButtonText || 'Заказать')}
                     </button>
