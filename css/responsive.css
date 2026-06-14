@@ -1128,76 +1128,73 @@
     }
 }
 
-/* ===== ПОИСК НА ВСЮ ШИРИНУ ПОД ЛОГОТИПОМ (МОБИЛЬНЫЕ) ===== */
+/* ===== ПОИСК НА МОБИЛЬНЫХ - БЕЗОПАСНАЯ ВЕРСИЯ ===== */
 @media (max-width: 768px) {
-    /* Шапка — колонкой */
+    /* Шапка */
+    .header {
+        padding: 12px 0 !important;
+    }
+    
     .header-top {
         display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
+        flex-wrap: wrap !important;
         gap: 12px !important;
     }
     
-    /* Первая строка: логотип слева, кнопки справа */
-    .header-top {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-    }
-    
-    /* Логотип */
+    /* Логотип и кнопки в одну строку */
     .logo {
-        order: 1 !important;
         flex: 1 !important;
     }
     
-    /* Кнопки (корзина, избранное, меню) */
     .header-actions {
-        order: 2 !important;
-        margin-left: auto !important;
+        display: flex !important;
+        gap: 8px !important;
     }
     
-    /* Поиск — на отдельной строке, на всю ширину */
+    /* Поиск - отдельной строкой на всю ширину */
     .header-search {
-        order: 3 !important;
         display: block !important;
         width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        order: 3 !important;
+        position: relative !important;
     }
     
-    /* Поле поиска */
     .search-wrapper {
         width: 100% !important;
-        display: flex !important;
-        border-radius: 50px !important;
+        margin: 0 !important;
     }
     
     .header-search input {
         width: 100% !important;
-        padding: 12px 16px !important;
+        padding: 10px 15px !important;
         font-size: 14px !important;
     }
     
-    /* Результаты поиска — строго под полем */
-    .header-search {
+    /* Кнопки должны работать - убираем лишние pointer-events */
+    .icon-btn,
+    .menu-btn,
+    .cart-btn,
+    .favorites-btn,
+    .user-btn,
+    .admin-btn,
+    .logout-btn-header {
+        pointer-events: auto !important;
+        z-index: 100 !important;
         position: relative !important;
     }
     
+    /* Результаты поиска */
     .search-results-header {
         position: absolute !important;
-        top: 100% !important;
+        top: 45px !important;
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
-        max-width: 100% !important;
         max-height: 280px !important;
         overflow-y: auto !important;
         background: var(--bg-primary) !important;
-        border-radius: 16px !important;
-        margin-top: 8px !important;
+        border-radius: 12px !important;
         z-index: 9999 !important;
         border: 1px solid var(--border) !important;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
     }
 }
