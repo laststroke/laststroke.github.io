@@ -1639,4 +1639,119 @@ setTimeout(function() {
         qtyBlock.style.clear = 'both';
     }
 }, 100);
+
+// ===== ПРИНУДИТЕЛЬНАЯ ПРИВЯЗКА КНОПОК ДЛЯ ВСЕХ СТРАНИЦ =====
+function bindAllButtons() {
+    // Кнопка корзины
+    const cartBtn = document.getElementById('cartBtn');
+    if (cartBtn) {
+        // Удаляем старые обработчики
+        const newCartBtn = cartBtn.cloneNode(true);
+        cartBtn.parentNode.replaceChild(newCartBtn, cartBtn);
+        newCartBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Корзина нажата');
+            const panel = document.getElementById('cartPanel');
+            const overlay = document.getElementById('overlay');
+            if (panel) panel.classList.add('active');
+            if (overlay) overlay.classList.add('active');
+        };
+    }
+    
+    // Кнопка избранного
+    const favBtn = document.getElementById('favoritesBtn');
+    if (favBtn) {
+        const newFavBtn = favBtn.cloneNode(true);
+        favBtn.parentNode.replaceChild(newFavBtn, favBtn);
+        newFavBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Избранное нажато');
+            const panel = document.getElementById('favoritesPanel');
+            const overlay = document.getElementById('overlay');
+            if (panel) panel.classList.add('active');
+            if (overlay) overlay.classList.add('active');
+        };
+    }
+    
+    // Кнопка меню (бургер)
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn) {
+        const newMenuBtn = menuBtn.cloneNode(true);
+        menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+        newMenuBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Меню нажато');
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('overlay');
+            if (menu) menu.classList.add('active');
+            if (overlay) overlay.classList.add('active');
+        };
+    }
+    
+    // Кнопка пользователя
+    const userBtn = document.getElementById('userBtn');
+    if (userBtn) {
+        const newUserBtn = userBtn.cloneNode(true);
+        userBtn.parentNode.replaceChild(newUserBtn, userBtn);
+        newUserBtn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Пользователь нажат');
+            document.getElementById('authModal')?.classList.add('active');
+            document.getElementById('overlay')?.classList.add('active');
+        };
+    }
+    
+    // Кнопка закрытия корзины
+    const cartClose = document.querySelector('.cart-close');
+    if (cartClose) {
+        const newCartClose = cartClose.cloneNode(true);
+        cartClose.parentNode.replaceChild(newCartClose, cartClose);
+        newCartClose.onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('cartPanel')?.classList.remove('active');
+            document.getElementById('favoritesPanel')?.classList.remove('active');
+            document.getElementById('mobileMenu')?.classList.remove('active');
+            document.getElementById('authModal')?.classList.remove('active');
+            document.getElementById('checkoutModal')?.classList.remove('active');
+            document.getElementById('overlay')?.classList.remove('active');
+        };
+    }
+    
+    // Кнопка закрытия избранного
+    const favClose = document.querySelector('.favorites-close');
+    if (favClose) {
+        const newFavClose = favClose.cloneNode(true);
+        favClose.parentNode.replaceChild(newFavClose, favClose);
+        newFavClose.onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('favoritesPanel')?.classList.remove('active');
+            document.getElementById('overlay')?.classList.remove('active');
+        };
+    }
+    
+    // Кнопка закрытия мобильного меню
+    const mobileClose = document.querySelector('.mobile-menu-close');
+    if (mobileClose) {
+        const newMobileClose = mobileClose.cloneNode(true);
+        mobileClose.parentNode.replaceChild(newMobileClose, mobileClose);
+        newMobileClose.onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('mobileMenu')?.classList.remove('active');
+            document.getElementById('overlay')?.classList.remove('active');
+        };
+    }
+    
+    console.log('Все кнопки привязаны');
+}
+
+// Запускаем при загрузке страницы
+bindAllButtons();
+
+// Также запускаем после загрузки Firebase данных (на случай динамического обновления)
+setTimeout(bindAllButtons, 1000);
+
 });
