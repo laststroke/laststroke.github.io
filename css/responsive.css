@@ -49,7 +49,7 @@
         padding: 0 15px;
     }
     
-    /* ШАПКА - ПОИСК НА ВСЮ ШИРИНУ ПОД ЛОГОТИПОМ */
+    /* ШАПКА */
     .header {
         padding: 12px 0;
         min-height: auto;
@@ -62,9 +62,11 @@
         gap: 10px;
         margin-bottom: 12px;
     }
+    
+    /* ЛОГОТИП СЛЕВА */
     .logo {
         order: 1;
-        flex: 1;
+        flex: 0 0 auto;
     }
     .logo a {
         gap: 8px;
@@ -75,76 +77,21 @@
     .logo-text {
         font-size: 18px;
     }
+    
+    /* КНОПКИ СПРАВА */
     .header-actions {
         order: 2;
         display: flex;
         gap: 8px;
         margin-left: auto;
     }
-    .header-search {
-        order: 3;
-        display: block !important;
-        width: 100% !important;
-        margin-top: 10px;
-        position: relative;
-    }
-    .search-wrapper {
-        width: 100% !important;
-        display: flex;
-        align-items: center;
-        background: var(--bg-secondary);
-        border-radius: 50px;
-        border: 1px solid var(--border);
-    }
-    .header-search input {
-        width: 100%;
-        padding: 10px 15px;
-        font-size: 14px;
-    }
-    .search-submit {
-        padding: 8px 12px;
-    }
-    
-    /* Результаты поиска - под полем ввода */
-    .search-results-header {
-        position: absolute !important;
-        top: 45px !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        max-height: 280px !important;
-        overflow-y: auto !important;
-        background: var(--bg-primary) !important;
-        border-radius: 12px !important;
-        z-index: 9999 !important;
-        border: 1px solid var(--border) !important;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
-    }
-    .search-result-item {
-        padding: 8px 12px !important;
-    }
-    .search-result-img {
-        width: 35px !important;
-        height: 35px !important;
-    }
-    .search-result-name {
-        font-size: 12px !important;
-    }
-    
-    /* КНОПКИ - должны работать */
-    .icon-btn,
-    .menu-btn,
-    .cart-btn,
-    .favorites-btn,
-    .user-btn,
-    .admin-btn,
-    .logout-btn-header {
-        cursor: pointer;
-        z-index: 101;
-        position: relative;
-    }
     .icon-btn {
         padding: 6px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        z-index: 100;
+        position: relative;
     }
     .icon-btn i {
         font-size: 16px;
@@ -159,10 +106,7 @@
         max-width: 100px;
     }
     
-    /* НАВИГАЦИЯ */
-    .nav {
-        display: none;
-    }
+    /* МЕНЮ КНОПКА (БУРГЕР) */
     .menu-btn {
         display: flex !important;
         flex-direction: column;
@@ -171,12 +115,86 @@
         border: none;
         cursor: pointer;
         padding: 6px;
+        z-index: 100;
+        position: relative;
     }
     .menu-btn span {
         width: 22px;
         height: 2px;
         background: var(--text-primary);
         border-radius: 2px;
+    }
+    
+    /* НАВИГАЦИЯ - СКРЫТА */
+    .nav {
+        display: none;
+    }
+    
+    /* ПОИСК - НА ОТДЕЛЬНОЙ СТРОКЕ ПО ЦЕНТРУ */
+    .header-search {
+        order: 3;
+        display: block !important;
+        width: 100% !important;
+        margin-top: 12px;
+        position: relative;
+    }
+    .search-wrapper {
+        width: 90% !important;
+        max-width: 350px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center;
+        background: var(--bg-secondary);
+        border-radius: 60px;
+        border: 1px solid var(--border);
+    }
+    .header-search input {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 14px;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        outline: none;
+    }
+    .search-submit {
+        background: none;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        color: var(--text-muted);
+    }
+    
+    /* РЕЗУЛЬТАТЫ ПОИСКА - ПОД ПОЛЕМ */
+    .search-results-header {
+        position: absolute !important;
+        top: 45px !important;
+        left: 5% !important;
+        width: 90% !important;
+        max-height: 280px !important;
+        overflow-y: auto !important;
+        background: var(--bg-primary) !important;
+        border-radius: 16px !important;
+        z-index: 9999 !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
+    }
+    .search-result-item {
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+    .search-result-img {
+        width: 35px !important;
+        height: 35px !important;
+        border-radius: 8px !important;
+        object-fit: cover !important;
+    }
+    .search-result-name {
+        font-size: 12px !important;
+        font-weight: 500 !important;
     }
     
     /* МОБИЛЬНОЕ МЕНЮ */
