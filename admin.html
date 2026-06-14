@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Последний штрих</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="loginForm" class="login-form-wrapper" style="display: none;">
+            <div class="login-form">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Вход в админ-панель</h2>
+                <p>Введите учетные данные администратора</p>
+                <input type="email" id="adminEmail" class="form-input" placeholder="Email">
+                <input type="password" id="adminPassword" class="form-input" placeholder="Пароль">
+                <button id="loginBtn" class="submit-btn">Войти</button>
+                <p id="loginMessage" class="login-message"></p>
+            </div>
+        </div>
+        <div id="adminPanel" style="display: none;">
+            <div class="admin-container">
+                <div class="admin-header">
+                    <div class="admin-title"><i class="fas fa-palette"></i><h1>Админ-панель Последний штрих</h1></div>
+                    <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                </div>
+                <div class="admin-stats">
+                    <div class="stat-card"><div class="number" id="totalOrders">0</div><div class="label">Всего заказов</div></div>
+                    <div class="stat-card"><div class="number" id="newOrders">0</div><div class="label">Новые заказы</div></div>
+                    <div class="stat-card"><div class="number" id="totalRevenue">0 ₽</div><div class="label">Выручка</div></div>
+                    <div class="stat-card"><div class="number" id="totalProducts">0</div><div class="label">Всего товаров</div></div>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" data-tab="orders"><i class="fas fa-shopping-cart"></i> Заказы</button>
+                    <button class="admin-tab-btn" data-tab="products"><i class="fas fa-palette"></i> Товары</button>
+                    <button class="admin-tab-btn" data-tab="services"><i class="fas fa-concierge-bell"></i> Услуги</button>
+                    <button class="admin-tab-btn" data-tab="serviceorders"><i class="fas fa-calendar-check"></i> Заявки на услуги</button>
+                    <button class="admin-tab-btn" data-tab="stats"><i class="fas fa-chart-line"></i> Статистика</button>
+                </div>
+                <div class="admin-tab-content active" id="tab-orders">
+                    <div class="admin-section-header"><h3><i class="fas fa-shopping-cart"></i> Управление заказами</h3></div>
+                    <div class="orders-table"><table><thead><tr><th>№ Заказа</th><th>Клиент</th><th>Телефон</th><th>Товары</th><th>Сумма</th><th>Статус</th><th>Дата</th><th>Действия</th></tr></thead><tbody id="ordersList"><tr><td colspan="8" class="text-center">Загрузка заказов...</td></tr></tbody></table></div>
+                </div>
+                <div class="admin-tab-content" id="tab-products">
+                    <div class="admin-section-header"><h3><i class="fas fa-palette"></i> Управление товарами</h3><button class="admin-btn add-product-btn" id="addProductBtn"><i class="fas fa-plus"></i> Добавить товар</button></div>
+                    <div class="products-admin-grid" id="productsAdminGrid"><div class="loading">Загрузка товаров...</div></div>
+                </div>
+                <div class="admin-tab-content" id="tab-services">
+                    <div class="admin-section-header"><h3><i class="fas fa-concierge-bell"></i> Управление услугами</h3><button class="admin-btn add-service-btn" id="addServiceBtn"><i class="fas fa-plus"></i> Добавить услугу</button></div>
+                    <div class="services-admin-grid" id="servicesAdminGrid"><div class="loading">Загрузка услуг...</div></div>
+                </div>
+                <div class="admin-tab-content" id="tab-serviceorders">
+                    <div class="admin-section-header"><h3><i class="fas fa-calendar-check"></i> Заявки на услуги</h3></div>
+                    <div id="serviceOrdersList"><div class="loading">Загрузка заявок...</div></div>
+                </div>
+                <div class="admin-tab-content" id="tab-stats">
+                    <div class="admin-section-header"><h3><i class="fas fa-chart-line"></i> Аналитика продаж</h3><button class="admin-btn refresh-stats-btn" id="refreshStatsBtn"><i class="fas fa-sync-alt"></i> Обновить</button></div>
+                    <div class="stats-grid">
+                        <div class="stats-card"><div class="stats-icon"><i class="fas fa-shopping-cart"></i></div><div class="stats-info"><div class="stats-label">Всего заказов</div><div class="stats-value" id="statsTotalOrders">0</div></div></div>
+                        <div class="stats-card"><div class="stats-icon"><i class="fas fa-ruble-sign"></i></div><div class="stats-info"><div class="stats-label">Общая выручка</div><div class="stats-value" id="statsTotalRevenue">0 ₽</div></div></div>
+                        <div class="stats-card"><div class="stats-icon"><i class="fas fa-chart-line"></i></div><div class="stats-info"><div class="stats-label">Средний чек</div><div class="stats-value" id="statsAverageCheck">0 ₽</div></div></div>
+                        <div class="stats-card"><div class="stats-icon"><i class="fas fa-trophy"></i></div><div class="stats-info"><div class="stats-label">Самый популярный товар</div><div class="stats-value" id="statsTopProduct">—</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="productModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="productModalTitle"><i class="fas fa-plus-circle"></i> Добавить товар</h3><button class="modal-close product-modal-close">&times;</button></div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-group"><label>Название *</label><input type="text" id="productName" class="form-input" required></div>
+                    <div class="form-group"><label>Художник</label><input type="text" id="productArtist" class="form-input"></div>
+                    <div class="form-group"><label>Описание</label><textarea id="productDescription" class="form-input" rows="3"></textarea></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Цена (₽) *</label><input type="number" id="productPrice" class="form-input" required></div>
+                        <div class="form-group"><label>Категория *</label><select id="productCategory" class="form-input"><option value="картины">Картины</option><option value="постеры">Постеры</option><option value="модульные картины">Модульные картины</option><option value="репродукции">Репродукции</option></select></div>
+                    </div>
+                    <div class="form-group"><label>Бейдж</label><select id="productBadge" class="form-input"><option value="">— Нет —</option><option value="Новинка">Новинка</option><option value="Хит">Хит</option><option value="Акция">Акция</option></select></div>
+                    <div class="form-group"><label>URL изображения</label><input type="text" id="productImage" class="form-input" placeholder="https://... или images/..."></div>
+                    <div class="form-actions"><button type="button" class="cancel-btn product-cancel">Отмена</button><button type="submit" class="submit-btn">Сохранить</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="serviceModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="serviceModalTitle"><i class="fas fa-plus-circle"></i> Добавить услугу</h3><button class="modal-close service-modal-close">&times;</button></div>
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <div class="form-group"><label>Название *</label><input type="text" id="serviceName" class="form-input" required></div>
+                    <div class="form-group"><label>Краткое описание *</label><textarea id="serviceDescription" class="form-input" rows="2" required></textarea></div>
+                    <div class="form-group"><label>Полное описание</label><textarea id="serviceFullDescription" class="form-input" rows="4" placeholder="Подробное описание услуги..."></textarea></div>
+                    <div class="form-group"><label>URL изображения услуги</label><input type="text" id="serviceImage" class="form-input" placeholder="https://... или images/..."></div>
+                    <div class="form-group"><label>Цена / стоимость</label><input type="text" id="servicePrice" class="form-input" placeholder="от 1 500 ₽"></div>
+                    <div class="form-group"><label>Преимущества (каждое с новой строки)</label><textarea id="serviceFeatures" class="form-input" rows="4" placeholder="Подбор рамы&#10;Защитное стекло"></textarea></div>
+                    <div class="form-group"><label>Текст на кнопке заказа</label><input type="text" id="serviceOrderButtonText" class="form-input" placeholder="Заказать оформление"></div>
+                    <div class="form-actions"><button type="button" class="cancel-btn service-cancel">Отмена</button><button type="submit" class="submit-btn">Сохранить</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="notifications" id="notifications"></div>
+    <div class="confirm-modal" id="adminConfirmModal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header"><h3>Подтверждение удаления</h3><button class="confirm-modal-close" onclick="closeAdminConfirm()">&times;</button></div>
+            <div class="confirm-modal-body"><p id="adminConfirmMessage">Вы уверены, что хотите удалить?</p></div>
+            <div class="confirm-modal-footer"><button class="confirm-btn-cancel" id="adminConfirmCancel">Отмена</button><button class="confirm-btn-ok" id="adminConfirmOk">Да, удалить</button></div>
+        </div>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>

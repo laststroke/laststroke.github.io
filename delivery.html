@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доставка и оплата | Последний штрих</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/logo.webp" alt="Последний штрих">
+                        <span class="logo-text">Последний<span> штрих</span></span>
+                    </a>
+                </div>
+                <div class="header-search">
+                    <div class="search-wrapper">
+                        <input type="text" id="headerSearchInput" placeholder="Поиск по названию, художнику или категории">
+                        <button class="search-submit" id="headerSearchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn favorites-btn" id="favoritesBtn"><i class="far fa-heart"></i><span class="count" id="favoritesCount">0</span></button>
+                    <button class="icon-btn cart-btn" id="cartBtn"><i class="fas fa-shopping-bag"></i><span class="count" id="cartCount">0</span></button>
+                    <div class="user-info-header" id="userInfoHeader">
+                        <span class="user-email-display" id="userEmailDisplay"></span>
+                        <button class="icon-btn logout-btn-header" id="logoutBtnHeader" style="display: none;"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                    <button class="icon-btn user-btn" id="userBtn"><i class="far fa-user"></i></button>
+                    <button class="icon-btn admin-btn" id="adminBtn" style="display: none;"><i class="fas fa-shield-alt"></i></button>
+                    <button class="menu-btn" id="menuBtn"><span></span><span></span><span></span></button>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Главная</a>
+                <a href="catalog.html">Каталог</a>
+                <a href="services.html">Услуги</a>
+                <a href="about.html">О нас</a>
+                <a href="contacts.html">Контакты</a>
+                <a href="delivery.html" class="active">Доставка и оплата</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header"><span>Меню</span><button class="mobile-menu-close"><i class="fas fa-times"></i></button></div>
+        <div class="mobile-menu-body">
+            <a href="index.html">Главная</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="services.html">Услуги</a>
+            <a href="about.html">О нас</a>
+            <a href="contacts.html">Контакты</a>
+            <a href="delivery.html">Доставка и оплата</a>
+        </div>
+    </div>
+
+    <main>
+        <div class="page-hero delivery-hero">
+            <div class="container">
+                <h1>Доставка и оплата</h1>
+                <p>Удобные способы получения и оплаты ваших заказов</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="delivery-content">
+                <div class="delivery-section">
+                    <div class="delivery-icon"><i class="fas fa-box-open"></i></div>
+                    <h2>Упаковка и сохранность</h2>
+                    <p>Мы уделяем особое внимание упаковке, чтобы ваши произведения искусства дошли в идеальном состоянии.</p>
+                    <div class="delivery-features">
+                        <div class="delivery-feature">
+                            <i class="fas fa-palette"></i>
+                            <div>
+                                <h4>Картины на подрамнике</h4>
+                                <p>Упаковываются в пузырчатую плёнку, затем в усиленный картонный короб с пенопластовыми вставками.</p>
+                            </div>
+                        </div>
+                        <div class="delivery-feature">
+                            <i class="fas fa-scroll"></i>
+                            <div>
+                                <h4>Постеры</h4>
+                                <p>Скручиваются в плотный тубус из крафт-картона.</p>
+                            </div>
+                        </div>
+                        <div class="delivery-feature">
+                            <i class="fas fa-th-large"></i>
+                            <div>
+                                <h4>Модульные картины</h4>
+                                <p>Каждый модуль упаковывается отдельно в пузырчатую плёнку и картонную коробку.</p>
+                            </div>
+                        </div>
+                        <div class="delivery-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Хрупкие работы</h4>
+                                <p>Дополнительное усиление углов и страховка груза.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="delivery-note">
+                        <i class="fas fa-shield-alt"></i> Все заказы застрахованы на 100% стоимости.
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-icon"><i class="fas fa-clock"></i></div>
+                    <h2>Сроки изготовления</h2>
+                    <div class="delivery-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Репродукции и постеры</h4>
+                                <p>от 1 до 3 рабочих дней</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Оригинальные картины</h4>
+                                <p>от 3 до 7 рабочих дней (в зависимости от наличия)</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Картины на заказ</h4>
+                                <p>от 14 рабочих дней</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h4>Оформление в багет</h4>
+                                <p>от 3 рабочих дней</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-icon"><i class="fas fa-credit-card"></i></div>
+                    <h2>Оплата заказа</h2>
+                    <div class="payment-grid">
+                        <div class="payment-card">
+                            <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                            <h3>Банковская карта онлайн</h3>
+                            <p>Visa, MasterCard, Мир. Безопасная оплата через защищённый шлюз.</p>
+                            <div class="payment-badge">Мгновенно</div>
+                        </div>
+                        <div class="payment-card">
+                            <div class="payment-icon"><i class="fas fa-building"></i></div>
+                            <h3>Безналичный расчёт для юрлиц</h3>
+                            <p>Выставляем счёт с НДС. Работаем с юридическими лицами и ИП.</p>
+                            <div class="payment-badge">По счету</div>
+                        </div>
+                        <div class="payment-card">
+                            <div class="payment-icon"><i class="fas fa-landmark"></i></div>
+                            <h3>СБП (Система быстрых платежей)</h3>
+                            <p>Оплата через мобильное приложение банка по QR-коду. Без комиссии.</p>
+                            <div class="payment-badge">Без комиссии</div>
+                        </div>
+                        <div class="payment-card">
+                            <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
+                            <h3>Наличными при получении</h3>
+                            <p>Оплата курьеру или в пункте самовывоза. Только при заказе от 1 000 ₽.</p>
+                            <div class="payment-badge">При получении</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-section">
+                    <div class="delivery-icon"><i class="fas fa-truck"></i></div>
+                    <h2>Доставка</h2>
+                    <div class="delivery-grid">
+                        <div class="delivery-card">
+                            <div class="delivery-card-icon"><i class="fas fa-truck"></i></div>
+                            <h3>Курьерская доставка</h3>
+                            <p>Доставка по Москве – 300 ₽ (бесплатно от 5 000 ₽).</p>
+                            <p>Доставка по Московской области – 500 ₽.</p>
+                            <p class="delivery-time"><i class="fas fa-clock"></i> Срок доставки – 1-2 дня после готовности заказа</p>
+                        </div>
+                        <div class="delivery-card">
+                            <div class="delivery-card-icon"><i class="fas fa-store"></i></div>
+                            <h3>Самовывоз</h3>
+                            <p><strong>Бесплатно</strong></p>
+                            <p>Адрес: Москва, ул. Тверская, 15 (вход со двора)</p>
+                            <p class="delivery-time"><i class="fas fa-clock"></i> Часы работы: Пн-Пт 10:00-21:00, Сб-Вс 11:00-20:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="delivery-section faq-section">
+                    <div class="delivery-icon"><i class="fas fa-question-circle"></i></div>
+                    <h2>Часто задаваемые вопросы</h2>
+                    <div class="faq-grid">
+                        <div class="faq-item">
+                            <div class="faq-question"><i class="fas fa-chevron-right"></i><span>Как быстро обрабатывается заказ?</span></div>
+                            <div class="faq-answer"><p>Заказы обрабатываются в течение 1 рабочего дня после подтверждения оплаты. Вы получите уведомление на email.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><i class="fas fa-chevron-right"></i><span>Можно ли вернуть товар, если он не подошёл?</span></div>
+                            <div class="faq-answer"><p>Да, вы можете вернуть товар в течение 14 дней с момента получения. Товар должен быть в оригинальной упаковке.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><i class="fas fa-chevron-right"></i><span>Как долго хранится заказ в пункте самовывоза?</span></div>
+                            <div class="faq-answer"><p>Заказ хранится в пункте самовывоза 7 календарных дней с момента готовности. Если вы не успеваете забрать заказ в этот срок, свяжитесь с нами – мы продлим хранение до 14 дней по вашему запросу.</p></div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question"><i class="fas fa-chevron-right"></i><span>Как отследить статус заказа?</span></div>
+                            <div class="faq-answer"><p>После отправки заказа вы получите трек-номер на email. Отслеживать можно на сайте почтовой службы.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">Последний штрих</div>
+                    <p>Искусство, которое вдохновляет. Уникальные картины и постеры для вашего интерьера.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Каталог</h4>
+                    <a href="catalog.html?category=painting">Картины</a>
+                    <a href="catalog.html?category=poster">Постеры</a>
+                    <a href="catalog.html?category=modular">Модульные картины</a>
+                    <a href="catalog.html?category=reproduction">Репродукции</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Услуги</h4>
+                    <a href="#" class="service-footer-link" data-service-name="Оформление в багет">Оформление в багет</a>
+                    <a href="#" class="service-footer-link" data-service-name="Для офиса и бизнеса">Для офиса и бизнеса</a>
+                    <a href="#" class="service-footer-link" data-service-name="На заказ">На заказ</a>
+                    <a href="#" class="service-footer-link" data-service-name="Реставрация картин">Реставрация картин</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Контакты</h4>
+                    <p><i class="fas fa-phone"></i> +7 (495) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@posledniyshtrih.ru</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Москва, ул. Тверская, 15</p>
+                    <p><a href="delivery.html">Доставка и оплата</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 Последний штрих. Все права защищены.</p></div>
+        </div>
+    </footer>
+
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3>Вход</h3>
+                <button class="auth-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="auth-modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+                <form id="loginForm" class="auth-form active">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Пароль" required>
+                    <button type="submit" class="btn-primary">Войти</button>
+                </form>
+                <form id="registerForm" class="auth-form">
+                    <input type="text" id="registerName" placeholder="Имя" required>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Пароль" required>
+                    <button type="submit" class="btn-primary">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+            <h3>Корзина</h3>
+            <button class="cart-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">Итого: <span id="cartTotal">0 руб.</span></div>
+            <button class="btn-primary" id="checkoutBtn">Оформить</button>
+        </div>
+    </div>
+
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-modal-content">
+            <div class="checkout-modal-header">
+                <h3>Оформление заказа</h3>
+                <button class="checkout-modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="checkout-modal-body">
+                <form id="checkoutForm">
+                    <div class="form-group"><label>Имя <span class="required">*</span></label><input type="text" id="checkoutName" required><div class="error-message" id="nameError"></div></div>
+                    <div class="form-group"><label>Телефон <span class="required">*</span></label><input type="tel" id="checkoutPhone" placeholder="+7 (___) ___-__-__" required><div class="error-message" id="phoneError"></div></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="checkoutEmail" placeholder="example@mail.ru"><div class="error-message" id="emailError"></div></div>
+                    <div class="form-group"><label>Адрес <span class="required">*</span></label><input type="text" id="checkoutAddress" required><div class="error-message" id="addressError"></div></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Доставка</label><select id="checkoutDelivery"><option value="courier">Курьером</option><option value="pickup">Самовывоз</option></select></div>
+                        <div class="form-group"><label>Оплата</label><select id="checkoutPayment"><option value="card">Банковская карта онлайн</option><option value="cash">Наличными при получении</option></select></div>
+                    </div>
+                    <div id="cardDetails" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>Номер карты</label><input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19"><div class="error-message" id="cardNumberError"></div></div>
+                            <div class="form-group"><label>Срок действия</label><input type="text" id="cardExpiry" placeholder="MM/ГГ" maxlength="5"><div class="error-message" id="cardExpiryError"></div></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>CVV/CVC</label><input type="password" id="cardCvv" placeholder="***" maxlength="3"><div class="error-message" id="cardCvvError"></div></div>
+                            <div class="form-group"><label>Владелец карты</label><input type="text" id="cardHolder" placeholder="IVANOV IVAN"><div class="error-message" id="cardHolderError"></div></div>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Комментарий</label><textarea id="checkoutComment" rows="3"></textarea></div>
+                    <div class="checkout-order-summary"><h4>Ваш заказ</h4><div id="checkoutOrderItems"></div><div class="checkout-total">Итого: <span id="checkoutTotal">0 руб.</span></div></div>
+                    <button type="submit" class="btn-primary">Подтвердить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="favorites-panel" id="favoritesPanel">
+        <div class="favorites-header">
+            <h3>Избранное</h3>
+            <button class="favorites-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="favorites-items" id="favoritesItems"></div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="notifications" id="notifications"></div>
+
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <h3>Подтверждение удаления</h3>
+                <button class="confirm-modal-close">&times;</button>
+            </div>
+            <div class="confirm-modal-body">
+                <p id="confirmMessage">Вы уверены, что хотите удалить этот товар из корзины?</p>
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="confirm-btn-cancel" id="confirmCancel">Отмена</button>
+                <button class="confirm-btn-ok" id="confirmOk">Да, удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+
+</body>
+</html>
