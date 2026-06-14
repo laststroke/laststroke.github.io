@@ -3273,10 +3273,20 @@ body {
     box-shadow: 0 5px 15px rgba(201,126,74,0.3) !important;
 }
 
-/* Фикс кликабельности кнопок */
+/* ФИКС КЛИКАБЕЛЬНОСТИ КНОПОК НА МОБИЛЬНЫХ */
 .icon-btn,
-.menu-btn {
+.menu-btn,
+.cart-btn,
+.favorites-btn,
+.user-btn,
+.admin-btn,
+.logout-btn-header {
     cursor: pointer;
-    position: relative;
-    z-index: 101;
+    pointer-events: auto !important;
+    z-index: 1000 !important;
+    position: relative !important;
+}
+
+.header-actions {
+    pointer-events: auto !important;
 }
