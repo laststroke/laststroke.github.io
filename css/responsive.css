@@ -426,49 +426,7 @@
         right: 0 !important;
     }
     
-    /* ДЕТАЛЬНАЯ СТРАНИЦА */
-    .product-detail {
-        gap: 30px;
-        padding: 0 0 40px 0;
-    }
-    .product-info-detail h1 {
-        font-size: 28px;
-    }
-    .product-price-detail {
-        font-size: 26px;
-    }
-    
-    /* ДЕТАЛЬНАЯ СТРАНИЦА - КАРТИНКА */
-    .product-detail-container {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    .product-detail {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    .product-gallery {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    .product-main-image {
-        margin: 0 !important;
-        padding: 0 !important;
-        border-radius: 0 !important;
-    }
-    .product-main-image img {
-        width: 100% !important;
-        height: auto !important;
-        object-fit: contain !important;
-    }
-    .product-info-detail {
-        margin: 0 !important;
-        padding: 20px 15px !important;
-        background: var(--bg-secondary) !important;
-    }
+
     
     /* УСЛУГИ В ОДНУ КОЛОНКУ */
     .services-full {
@@ -619,5 +577,91 @@
     .product-quantity {
         flex-direction: row;
         justify-content: space-between;
+    }
+}
+
+/* ===== ФИКС КЛИКАБЕЛЬНОСТИ НА МОБИЛЬНЫХ - САМЫЙ ВАЖНЫЙ БЛОК ===== */
+@media (max-width: 768px) {
+    .icon-btn,
+    .menu-btn,
+    .cart-btn,
+    .favorites-btn,
+    .user-btn,
+    .admin-btn,
+    .logout-btn-header,
+    .logo a,
+    .header-actions button {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        z-index: 9999 !important;
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .header-actions {
+        pointer-events: auto !important;
+        z-index: 9999 !important;
+    }
+    
+    /* Убираем возможные перекрывающие элементы */
+    .header-search {
+        pointer-events: auto !important;
+    }
+    
+    .search-wrapper {
+        pointer-events: auto !important;
+    }
+}
+
+
+
+
+
+
+
+/* ===== ФИКС КАРТИНКИ В АДАПТИВЕ ===== */
+@media (max-width: 768px) {
+    .product-detail {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 20px 15px !important;
+        margin: 0 !important;
+    }
+    
+    .product-gallery {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        border-radius: 16px !important;
+    }
+    
+    .product-main-image {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        background: var(--bg-secondary) !important;
+    }
+    
+    .product-main-image img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 350px !important;
+        display: block !important;
+        object-fit: cover !important;
+        position: static !important;
+        transform: none !important;
+    }
+    
+    .product-info-detail {
+        width: 100% !important;
+        padding: 20px 15px !important;
+        margin: 0 !important;
+        background: var(--bg-secondary) !important;
+        border-radius: 16px !important;
     }
 }
