@@ -55,17 +55,18 @@
         min-height: auto;
     }
     .header-top {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 12px;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
     }
     
     /* ЛОГОТИП СЛЕВА */
     .logo {
-        order: 1;
-        flex: 0 0 auto;
+        order: 1 !important;
+        flex-shrink: 0 !important;
     }
     .logo a {
         gap: 8px;
@@ -77,27 +78,24 @@
         font-size: 18px;
     }
     
-    /* КНОПКИ (сердце, корзина, бургер) - СПРАВА */
-    .header-actions {
-        order: 2;
-        display: flex;
-        gap: 5px;
-        margin-left: auto;
-    }
-    
-    /* БЛОК С EMAIL И ВЫХОДОМ - ТОЖЕ СПРАВА, НО ПЕРЕД КНОПКАМИ */
+    /* БЛОК С EMAIL И ВЫХОДОМ */
     .user-info-header {
-        order: 2;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-left: auto;
-        margin-right: 5px;
+        order: 2 !important;
+        margin-left: auto !important;
+        margin-right: 5px !important;
+        flex-shrink: 0 !important;
+    }
+    .user-email-display {
+        font-size: 11px;
+        max-width: 100px;
     }
     
-    /* МЕНЯЕМ ПОРЯДОК: сначала user-info, потом кнопки */
+    /* КНОПКИ (корзина, избранное, бургер) */
     .header-actions {
-        order: 3;
+        order: 3 !important;
+        flex-shrink: 0 !important;
+        display: flex;
+        gap: 5px;
     }
     
     .icon-btn {
@@ -115,10 +113,6 @@
         width: 16px;
         height: 16px;
         font-size: 9px;
-    }
-    .user-email-display {
-        font-size: 11px;
-        max-width: 100px;
     }
     
     /* МЕНЮ КНОПКА (БУРГЕР) */
@@ -145,12 +139,12 @@
         display: none;
     }
     
-    /* ===== ПОИСК - НА ОТДЕЛЬНОЙ СТРОКЕ, НА ВСЮ ШИРИНУ ===== */
+    /* ПОИСК - НА ОТДЕЛЬНОЙ СТРОКЕ */
     .header-search {
         order: 4 !important;
         width: 100% !important;
         margin-top: 12px !important;
-        display: block !important;
+        flex-basis: 100% !important;
         position: relative !important;
     }
     
@@ -197,26 +191,6 @@
         z-index: 9999 !important;
         border: 1px solid var(--border) !important;
         box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
-    }
-    
-    .search-result-item {
-        padding: 8px 12px !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        border-bottom: 1px solid var(--border) !important;
-    }
-    
-    .search-result-img {
-        width: 35px !important;
-        height: 35px !important;
-        border-radius: 8px !important;
-        object-fit: cover !important;
-    }
-    
-    .search-result-name {
-        font-size: 12px !important;
-        font-weight: 500 !important;
     }
     
     /* МОБИЛЬНОЕ МЕНЮ */
@@ -436,7 +410,7 @@
         margin-bottom: 15px;
     }
     
-    /* КОРЗИНА */
+    /* КОРЗИНА И ИЗБРАННОЕ */
     .cart-panel,
     .favorites-panel {
         width: 320px !important;
@@ -492,7 +466,7 @@
         border-radius: 16px !important;
     }
     
-    /* УСЛУГИ В ОДНУ КОЛОНКУ */
+    /* УСЛУГИ */
     .services-full {
         grid-template-columns: 1fr !important;
         gap: 30px !important;
@@ -514,7 +488,7 @@
         width: 100% !important;
     }
     
-    /* КАРТИНКА НА СТРАНИЦЕ "О НАС" */
+    /* СТРАНИЦА "О НАС" */
     .about-content {
         display: flex !important;
         flex-direction: column !important;
@@ -544,154 +518,68 @@
     }
 }
 
-/* ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) */
-@media (max-width: 480px) {
-    .container {
-        padding: 0 12px;
-    }
-    .products-grid {
-        gap: 10px !important;
-    }
-    .product-image {
-        height: 140px;
-    }
-    .product-info {
-        padding: 8px;
-    }
-    .product-title {
-        font-size: 12px;
-    }
-    .product-artist {
-        font-size: 10px;
-        min-height: 28px;
-    }
-    .product-material {
-        font-size: 10px;
-        min-height: 28px;
-    }
-    .product-price {
-        font-size: 14px;
-    }
-    .product-add {
-        font-size: 11px;
-        padding: 6px;
-    }
-    .product-main-image img {
-        max-height: 200px;
-    }
-    .product-info-detail {
-        padding: 12px;
-    }
-    .product-info-detail h1 {
-        font-size: 22px;
-    }
-    .product-price-detail {
-        font-size: 20px;
-    }
-    .product-actions-detail .btn-primary,
-    .product-actions-detail .btn-outline {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-    .quantity-selector button {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
-    }
-    .hero-content h1 {
-        font-size: 24px;
-    }
-    .mobile-menu {
-        width: 260px;
-    }
+
+
+.cart-panel.active,
+.favorites-panel.active {
+    right: 0 !important;
+    display: flex !important;
 }
 
-/* АЛЬБОМНАЯ ОРИЕНТАЦИЯ */
-@media (max-width: 768px) and (orientation: landscape) {
-    .hero-fullscreen {
-        height: auto;
-        min-height: 350px;
-        padding: 30px 0;
-    }
-    .products-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-    .product-image {
-        height: 130px;
-    }
-    .mobile-menu {
-        width: 260px;
-    }
-    .product-detail {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        padding: 15px;
-    }
-    .product-main-image img {
-        max-height: 180px;
-    }
-    .product-actions-detail {
-        flex-direction: row;
-    }
-    .product-actions-detail .btn-primary,
-    .product-actions-detail .btn-outline {
-        width: 50%;
-    }
-    .product-quantity {
-        flex-direction: row;
-        justify-content: space-between;
-    }
+.overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 1500 !important;
+    display: none !important;
 }
 
-/* ===== ФИКС КЛИКАБЕЛЬНОСТИ ===== */
-@media (max-width: 768px) {
-    .icon-btn,
-    .menu-btn,
-    .cart-btn,
-    .favorites-btn,
-    .user-btn,
-    .admin-btn,
-    .logout-btn-header,
-    .logo a,
-    .header-actions button {
-        pointer-events: auto !important;
-        cursor: pointer !important;
-        z-index: 9999 !important;
-        position: relative !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    .header-actions {
-        pointer-events: auto !important;
-        z-index: 9999 !important;
-    }
-    
-    .header-search {
-        pointer-events: auto !important;
-    }
-    
-    .search-wrapper {
-        pointer-events: auto !important;
-    }
+.overlay.active {
+    display: block !important;
 }
 
 
-.search-wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
+
+
+
+
+
+
+
+
+.cart-panel.active,
+.favorites-panel.active {
+    right: 0 !important;
+    display: flex !important;
 }
 
-/* ===== ФИНАЛЬНЫЙ ФИКС ПОИСКА ПОСЛЕ ВХОДА ===== */
-@media (max-width: 768px) {
+.overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 1500 !important;
+    display: none !important;
+}
+
+.overlay.active {
+    display: block !important;
+}
+
+
+/* ===== ПК ВЕРСИЯ (больше 768px) ===== */
+@media (min-width: 769px) {
     .header-top {
         display: flex !important;
-        flex-wrap: wrap !important;
+        flex-wrap: nowrap !important;
         align-items: center !important;
-        justify-content: flex-start !important;
-        gap: 8px !important;
+        justify-content: space-between !important;
+        gap: 40px !important;
     }
     
     .logo {
@@ -699,42 +587,60 @@
         flex-shrink: 0 !important;
     }
     
-    /* Блок с email и кнопкой выхода */
-    .user-info-header {
-        order: 2 !important;
-        margin-left: auto !important;
-        margin-right: 5px !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* Кнопки (корзина, избранное, бургер) */
-    .header-actions {
-        order: 3 !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* ПОИСК - ВСЕГДА НА ОТДЕЛЬНОЙ СТРОКЕ, НА ВСЮ ШИРИНУ */
     .header-search {
-        order: 4 !important;
-        width: 100% !important;
-        margin-top: 12px !important;
-        flex-basis: 100% !important;
+        order: 2 !important;
+        flex: 1 !important;
+        max-width: 500px !important;
+        margin-top: 0 !important;
+        width: auto !important;
     }
     
-    .search-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
+    .user-info-header {
+        order: 3 !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .header-actions {
+        order: 4 !important;
+        flex-shrink: 0 !important;
     }
 }
 
-/* ДОПОЛНИТЕЛЬНЫЙ ФИКС ДЛЯ ПЛАНШЕТОВ (992px) */
-@media (min-width: 769px) and (max-width: 992px) {
-    .header-search {
-        max-width: 300px !important;
-    }
-    
-    .user-info-header {
-        margin-left: auto !important;
-    }
+/* ===== ФИКС ПАНЕЛЕЙ КОРЗИНЫ И ИЗБРАННОГО (ДЛЯ ВСЕХ УСТРОЙСТВ) ===== */
+.cart-panel,
+.favorites-panel {
+    position: fixed !important;
+    top: 0 !important;
+    right: -400px !important;
+    width: 380px !important;
+    max-width: 85% !important;
+    height: 100vh !important;
+    background: var(--bg-primary) !important;
+    transition: right 0.3s ease !important;
+    border-left: 1px solid var(--border) !important;
+    z-index: 3001 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.cart-panel.active,
+.favorites-panel.active {
+    right: 0 !important;
+    display: flex !important;
+}
+
+.overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 1500 !important;
+    display: none !important;
+}
+
+.overlay.active {
+    display: block !important;
 }
