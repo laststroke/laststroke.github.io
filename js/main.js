@@ -1501,9 +1501,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         checkoutEmail.value = currentUser.email;
         
-        document.getElementById('checkoutModal')?.classList.add('active');
-        document.getElementById('overlay')?.classList.add('active');
-    });
+        // СНАЧАЛА ЗАКРЫВАЕМ КОРЗИНУ, ПОТОМ ОТКРЫВАЕМ ОФОРМЛЕНИЕ
+        const cartPanel = document.getElementById('cartPanel');
+        if (cartPanel) cartPanel.classList.remove('active');
+        
+        setTimeout(() => {
+            document.getElementById('checkoutModal')?.classList.add('active');
+            document.getElementById('overlay')?.classList.add('active');
+        }, 100);
+    }); 
     document.querySelector('.checkout-modal-close')?.addEventListener('click', closePanels);
     document.getElementById('checkoutDelivery')?.addEventListener('change', function() {
         updatePaymentOptions();
@@ -1640,18 +1646,152 @@ setTimeout(function() {
     }
 }, 100);
 
-// ===== ПРИНУДИТЕЛЬНАЯ ПРИВЯЗКА КНОПОК ДЛЯ ВСЕХ СТРАНИЦ =====
-function bindAllButtons() {
+// ===== ФИКС КНОПКИ ОФОРМЛЕНИЯ (закрывает корзину и открывает оформление) =====
+const originalCheckoutBtn = document.getElementById('checkoutBtn');
+if (originalCheckoutBtn) {
+    const newCheckoutBtn = originalCheckoutBtn.cloneNode(true);
+    originalCheckoutBtn.parentNode.replaceChild(newCheckoutBtn, originalCheckoutBtn);
+    
+    newCheckoutBtn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (cart.length === 0) {
+            showNotification('Корзина пуста');
+            return;
+        }
+        if (!currentUser) {
+            document.getElementById('authModal')?.classList.add('active');
+            document.getElementById('overlay')?.classList.add('active');
+            return;
+        }
+        
+        clearCheckoutForm();
+        updateCheckoutSummary();
+        
+        const checkoutName = document.getElementById('checkoutName');
+        const checkoutEmail = document.getElementById('checkoutEmail');
+        
+        if (currentUser) {
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().name) {
+                    checkoutName.value = doc.data().name;
+                } else {
+                    checkoutName.value = currentUser.email.split('@')[0];
+                }
+            }).catch(() => {
+                checkoutName.value = currentUser.email.split('@')[0];
+            });
+            checkoutEmail.value = currentUser.email;
+        }
+        
+        // Закрываем корзину
+        const cartPanel = document.getElementById('cartPanel');
+        if (cartPanel) cartPanel.classList.remove('active');
+        
+        // Открываем оформление
+        setTimeout(() => {
+            document.getElementById('checkoutModal')?.classList.add('active');
+            document.getElementById('overlay')?.classList.add('active');
+        }, 150);
+    };
+}
+
+// ===== ФИКС КНОПКИ ВЫХОДА =====
+const logoutBtn = document.getElementById('logoutBtnHeader');
+if (logoutBtn) {
+    const newLogoutBtn = logoutBtn.cloneNode(true);
+    logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+    
+    newLogoutBtn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        auth.signOut().then(() => {
+            currentUser = null;
+            updateUserUI();
+            showNotification('Вы вышли из системы');
+            
+            // Очищаем форму заказа
+            const checkoutName = document.getElementById('checkoutName');
+            const checkoutEmail = document.getElementById('checkoutEmail');
+            if (checkoutName) checkoutName.value = '';
+            if (checkoutEmail) checkoutEmail.value = '';
+            
+            // Закрываем все панели
+            closePanels();
+            
+            // Перезагружаем страницу
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        }).catch(error => {
+            console.error('Ошибка выхода:', error);
+            showNotification('Ошибка при выходе', 'error');
+        });
+    };
+}
+
+
+
+// ===== ФИКС ЗАКРЫТИЯ КОРЗИНЫ И ОФОРМЛЕНИЯ =====
+const cartClose = document.querySelector('.cart-close');
+if (cartClose) {
+    const newCartClose = cartClose.cloneNode(true);
+    cartClose.parentNode.replaceChild(newCartClose, cartClose);
+    newCartClose.onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('cartPanel')?.classList.remove('active');
+        document.getElementById('favoritesPanel')?.classList.remove('active');
+        document.getElementById('mobileMenu')?.classList.remove('active');
+        document.getElementById('authModal')?.classList.remove('active');
+        document.getElementById('overlay')?.classList.remove('active');
+    };
+}
+
+const checkoutModalClose = document.querySelector('.checkout-modal-close');
+if (checkoutModalClose) {
+    const newCheckoutClose = checkoutModalClose.cloneNode(true);
+    checkoutModalClose.parentNode.replaceChild(newCheckoutClose, checkoutModalClose);
+    newCheckoutClose.onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('checkoutModal')?.classList.remove('active');
+        document.getElementById('overlay')?.classList.remove('active');
+    };
+}
+
+// ===== ПРОСТОЙ ФИКС ПОИСКА =====
+function fixSearch() {
+    if (window.innerWidth <= 768) {
+        const search = document.querySelector('.header-search');
+        if (search) {
+            search.style.order = '4';
+            search.style.width = '100%';
+            search.style.marginTop = '12px';
+        }
+    }
+}
+
+// Запускаем при загрузке и после входа
+setTimeout(fixSearch, 200);
+auth.onAuthStateChanged(function(user) {
+    setTimeout(fixSearch, 300);
+    setTimeout(fixSearch, 800);
+});
+window.addEventListener('resize', function() {
+    setTimeout(fixSearch, 100);
+});
+
+
+// ===== ФИКС КНОПОК В ШАПКЕ (КОРЗИНА, ИЗБРАННОЕ, БУРГЕР) =====
+function fixHeaderButtons() {
     // Кнопка корзины
     const cartBtn = document.getElementById('cartBtn');
     if (cartBtn) {
-        // Удаляем старые обработчики
         const newCartBtn = cartBtn.cloneNode(true);
         cartBtn.parentNode.replaceChild(newCartBtn, cartBtn);
         newCartBtn.onclick = function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            console.log('Корзина нажата');
             const panel = document.getElementById('cartPanel');
             const overlay = document.getElementById('overlay');
             if (panel) panel.classList.add('active');
@@ -1666,8 +1806,6 @@ function bindAllButtons() {
         favBtn.parentNode.replaceChild(newFavBtn, favBtn);
         newFavBtn.onclick = function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            console.log('Избранное нажато');
             const panel = document.getElementById('favoritesPanel');
             const overlay = document.getElementById('overlay');
             if (panel) panel.classList.add('active');
@@ -1675,15 +1813,13 @@ function bindAllButtons() {
         };
     }
     
-    // Кнопка меню (бургер)
+    // Бургер-меню
     const menuBtn = document.getElementById('menuBtn');
     if (menuBtn) {
         const newMenuBtn = menuBtn.cloneNode(true);
         menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
         newMenuBtn.onclick = function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            console.log('Меню нажато');
             const menu = document.getElementById('mobileMenu');
             const overlay = document.getElementById('overlay');
             if (menu) menu.classList.add('active');
@@ -1691,233 +1827,152 @@ function bindAllButtons() {
         };
     }
     
-    // Кнопка пользователя
+    // Кнопка пользователя (вход)
     const userBtn = document.getElementById('userBtn');
     if (userBtn) {
         const newUserBtn = userBtn.cloneNode(true);
         userBtn.parentNode.replaceChild(newUserBtn, userBtn);
         newUserBtn.onclick = function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            console.log('Пользователь нажат');
             document.getElementById('authModal')?.classList.add('active');
             document.getElementById('overlay')?.classList.add('active');
         };
     }
     
-    // Кнопка закрытия корзины
+    // Крестики закрытия
     const cartClose = document.querySelector('.cart-close');
     if (cartClose) {
         const newCartClose = cartClose.cloneNode(true);
         cartClose.parentNode.replaceChild(newCartClose, cartClose);
-        newCartClose.onclick = function(e) {
-            e.preventDefault();
+        newCartClose.onclick = function() {
             document.getElementById('cartPanel')?.classList.remove('active');
             document.getElementById('favoritesPanel')?.classList.remove('active');
             document.getElementById('mobileMenu')?.classList.remove('active');
             document.getElementById('authModal')?.classList.remove('active');
-            document.getElementById('checkoutModal')?.classList.remove('active');
             document.getElementById('overlay')?.classList.remove('active');
         };
     }
     
-    // Кнопка закрытия избранного
     const favClose = document.querySelector('.favorites-close');
     if (favClose) {
         const newFavClose = favClose.cloneNode(true);
         favClose.parentNode.replaceChild(newFavClose, favClose);
-        newFavClose.onclick = function(e) {
-            e.preventDefault();
+        newFavClose.onclick = function() {
             document.getElementById('favoritesPanel')?.classList.remove('active');
             document.getElementById('overlay')?.classList.remove('active');
         };
     }
     
-    // Кнопка закрытия мобильного меню
     const mobileClose = document.querySelector('.mobile-menu-close');
     if (mobileClose) {
         const newMobileClose = mobileClose.cloneNode(true);
         mobileClose.parentNode.replaceChild(newMobileClose, mobileClose);
-        newMobileClose.onclick = function(e) {
-            e.preventDefault();
+        newMobileClose.onclick = function() {
             document.getElementById('mobileMenu')?.classList.remove('active');
             document.getElementById('overlay')?.classList.remove('active');
         };
     }
     
-    console.log('Все кнопки привязаны');
-}
-
-// Запускаем при загрузке страницы
-bindAllButtons();
-
-// Также запускаем после загрузки Firebase данных (на случай динамического обновления)
-setTimeout(bindAllButtons, 1000);
-
-// ===== ФИКС 1: ПОИСК ПОСЕРЕДИНЕ ПОСЛЕ ВХОДА =====
-function fixSearchPosition() {
-    const headerSearch = document.querySelector('.header-search');
-    const headerTop = document.querySelector('.header-top');
-    
-    if (window.innerWidth <= 768) {
-        if (headerSearch && headerTop) {
-            // Проверяем порядок элементов
-            const logo = document.querySelector('.logo');
-            const actions = document.querySelector('.header-actions');
-            
-            if (logo) logo.style.order = '1';
-            if (actions) actions.style.order = '2';
-            if (headerSearch) {
-                headerSearch.style.order = '3';
-                headerSearch.style.width = '100%';
-                headerSearch.style.marginTop = '12px';
-            }
-            
-            const searchWrapper = document.querySelector('.search-wrapper');
-            if (searchWrapper) {
-                searchWrapper.style.width = '90%';
-                searchWrapper.style.margin = '0 auto';
-            }
-        }
+    const authClose = document.querySelector('.auth-modal-close');
+    if (authClose) {
+        const newAuthClose = authClose.cloneNode(true);
+        authClose.parentNode.replaceChild(newAuthClose, authClose);
+        newAuthClose.onclick = function() {
+            document.getElementById('authModal')?.classList.remove('active');
+            document.getElementById('overlay')?.classList.remove('active');
+        };
     }
+    
+    console.log('Кнопки шапки привязаны');
 }
 
-// ===== ФИКС 2: ВЫХОД ИЗ АККАУНТА =====
+// ===== ФИКС ВЫХОДА ИЗ АККАУНТА =====
 function fixLogout() {
     const logoutBtn = document.getElementById('logoutBtnHeader');
     if (logoutBtn) {
-        // Удаляем старые обработчики
         const newLogoutBtn = logoutBtn.cloneNode(true);
         logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
-        
         newLogoutBtn.onclick = function(e) {
             e.preventDefault();
-            e.stopPropagation();
             auth.signOut().then(() => {
                 currentUser = null;
                 updateUserUI();
                 showNotification('Вы вышли из системы');
-                // Очищаем форму заказа
-                const checkoutName = document.getElementById('checkoutName');
-                const checkoutEmail = document.getElementById('checkoutEmail');
-                if (checkoutName) checkoutName.value = '';
-                if (checkoutEmail) checkoutEmail.value = '';
+                closePanels();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 300);
             }).catch(error => {
-                console.error('Ошибка выхода:', error);
                 showNotification('Ошибка при выходе', 'error');
             });
         };
     }
 }
 
-// ===== ФИКС 3: КОРЗИНА - ПРИ ОФОРМЛЕНИИ ЗАКРЫВАТЬ ПАНЕЛЬ КОРЗИНЫ =====
-function fixCheckoutButton() {
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
-        const newCheckoutBtn = checkoutBtn.cloneNode(true);
-        checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
-        
-        newCheckoutBtn.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            if (cart.length === 0) {
-                showNotification('Корзина пуста');
-                return;
-            }
-            if (!currentUser) {
-                document.getElementById('authModal')?.classList.add('active');
-                document.getElementById('overlay')?.classList.add('active');
-                return;
-            }
-            
-            // Закрываем панель корзины
-            const cartPanel = document.getElementById('cartPanel');
-            if (cartPanel) cartPanel.classList.remove('active');
-            
-            // Очищаем и заполняем форму
-            clearCheckoutForm();
-            updateCheckoutSummary();
-            
-            // Подставляем имя и email
-            const checkoutName = document.getElementById('checkoutName');
-            const checkoutEmail = document.getElementById('checkoutEmail');
-            
-            if (currentUser) {
-                db.collection('users').doc(currentUser.uid).get().then(doc => {
-                    if (doc.exists && doc.data().name) {
-                        checkoutName.value = doc.data().name;
-                    } else {
-                        checkoutName.value = currentUser.email.split('@')[0];
-                    }
-                }).catch(() => {
-                    checkoutName.value = currentUser.email.split('@')[0];
-                });
-                checkoutEmail.value = currentUser.email;
-            }
-            
-            // Открываем модалку оформления
-            document.getElementById('checkoutModal')?.classList.add('active');
-            document.getElementById('overlay')?.classList.add('active');
-        };
-    }
-}
-
-// ===== ФИКС 4: ЗАКРЫТИЕ КОРЗИНЫ КРЕСТИКОМ =====
-function fixCartClose() {
-    const cartClose = document.querySelector('.cart-close');
-    if (cartClose) {
-        const newCartClose = cartClose.cloneNode(true);
-        cartClose.parentNode.replaceChild(newCartClose, cartClose);
-        
-        newCartClose.onclick = function(e) {
-            e.preventDefault();
-            document.getElementById('cartPanel')?.classList.remove('active');
-            document.getElementById('favoritesPanel')?.classList.remove('active');
-            document.getElementById('mobileMenu')?.classList.remove('active');
-            document.getElementById('authModal')?.classList.remove('active');
-            document.getElementById('checkoutModal')?.classList.remove('active');
-            document.getElementById('overlay')?.classList.remove('active');
-        };
-    }
-}
-
-// ===== ФИКС 5: ЗАКРЫТИЕ ОФОРМЛЕНИЯ КРЕСТИКОМ =====
-function fixCheckoutClose() {
-    const checkoutClose = document.querySelector('.checkout-modal-close');
-    if (checkoutClose) {
-        const newCheckoutClose = checkoutClose.cloneNode(true);
-        checkoutClose.parentNode.replaceChild(newCheckoutClose, checkoutClose);
-        
-        newCheckoutClose.onclick = function(e) {
-            e.preventDefault();
-            document.getElementById('checkoutModal')?.classList.remove('active');
-            document.getElementById('overlay')?.classList.remove('active');
-        };
+// ===== ПРОСТОЙ ФИКС ПОИСКА =====
+function fixSearch() {
+    if (window.innerWidth <= 768) {
+        const search = document.querySelector('.header-search');
+        if (search) {
+            search.style.order = '4';
+            search.style.width = '100%';
+            search.style.marginTop = '12px';
+        }
     }
 }
 
 // ===== ЗАПУСК ВСЕХ ФИКСОВ =====
 function runAllFixes() {
-    fixSearchPosition();
+    fixHeaderButtons();
     fixLogout();
-    fixCheckoutButton();
-    fixCartClose();
-    fixCheckoutClose();
+    fixSearch();
 }
 
 // Запускаем при загрузке
-setTimeout(runAllFixes, 500);
+setTimeout(runAllFixes, 300);
 
-// Запускаем при изменении размера окна (для поиска)
-window.addEventListener('resize', function() {
-    setTimeout(fixSearchPosition, 100);
+// Запускаем после входа/выхода
+auth.onAuthStateChanged(function(user) {
+    setTimeout(runAllFixes, 300);
+    setTimeout(runAllFixes, 800);
 });
 
-// Запускаем после обновления пользователя
+// Запускаем при изменении размера окна
+window.addEventListener('resize', function() {
+    setTimeout(fixSearch, 100);
+});
+
+// ===== ФИКС ПОИСКА ПОСЛЕ ВХОДА В АККАУНТ =====
+function centerSearchAfterLogin() {
+    if (window.innerWidth <= 768) {
+        const headerSearch = document.querySelector('.header-search');
+        if (headerSearch) {
+            headerSearch.style.order = '4';
+            headerSearch.style.width = '100%';
+            headerSearch.style.marginTop = '12px';
+            headerSearch.style.display = 'block';
+        }
+        const searchWrapper = document.querySelector('.search-wrapper');
+        if (searchWrapper) {
+            searchWrapper.style.width = '100%';
+            searchWrapper.style.maxWidth = '100%';
+            searchWrapper.style.margin = '0';
+        }
+    }
+}
+
+// Запускаем после входа в аккаунт с задержкой
 auth.onAuthStateChanged(function(user) {
-    setTimeout(fixLogout, 300);
-    setTimeout(fixSearchPosition, 300);
+    if (user) {
+        setTimeout(centerSearchAfterLogin, 200);
+        setTimeout(centerSearchAfterLogin, 500);
+        setTimeout(centerSearchAfterLogin, 1000);
+    }
+});
+
+// Запускаем также при изменении размера окна
+window.addEventListener('resize', function() {
+    setTimeout(centerSearchAfterLogin, 100);
 });
 
 });
