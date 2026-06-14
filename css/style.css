@@ -3272,3 +3272,11 @@ body {
     transform: translateY(-2px) !important;
     box-shadow: 0 5px 15px rgba(201,126,74,0.3) !important;
 }
+
+/* Фикс кликабельности кнопок */
+.icon-btn,
+.menu-btn {
+    cursor: pointer;
+    position: relative;
+    z-index: 101;
+}
