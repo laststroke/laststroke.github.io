@@ -1719,13 +1719,15 @@ body {
 .cart-panel,
 .favorites-panel {
     top: 0;
-    right: -450px;
-    width: 450px;
+    right: -100% !important;
+    width: 320px !important;
+    max-width: 85% !important;
     height: 100vh;
     background: var(--bg-primary);
-    transition: right 0.3s;
+    transition: right 0.3s ease;
     border-left: 1px solid var(--border);
     flex-direction: column;
+    z-index: 3001;
 }
 .cart-panel.active,
 .favorites-panel.active {
