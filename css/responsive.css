@@ -1127,3 +1127,77 @@
         color: var(--accent) !important;
     }
 }
+
+/* ===== ПОИСК НА ВСЮ ШИРИНУ ПОД ЛОГОТИПОМ (МОБИЛЬНЫЕ) ===== */
+@media (max-width: 768px) {
+    /* Шапка — колонкой */
+    .header-top {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    
+    /* Первая строка: логотип слева, кнопки справа */
+    .header-top {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+    
+    /* Логотип */
+    .logo {
+        order: 1 !important;
+        flex: 1 !important;
+    }
+    
+    /* Кнопки (корзина, избранное, меню) */
+    .header-actions {
+        order: 2 !important;
+        margin-left: auto !important;
+    }
+    
+    /* Поиск — на отдельной строке, на всю ширину */
+    .header-search {
+        order: 3 !important;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Поле поиска */
+    .search-wrapper {
+        width: 100% !important;
+        display: flex !important;
+        border-radius: 50px !important;
+    }
+    
+    .header-search input {
+        width: 100% !important;
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+    }
+    
+    /* Результаты поиска — строго под полем */
+    .header-search {
+        position: relative !important;
+    }
+    
+    .search-results-header {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 280px !important;
+        overflow-y: auto !important;
+        background: var(--bg-primary) !important;
+        border-radius: 16px !important;
+        margin-top: 8px !important;
+        z-index: 9999 !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+    }
+}
