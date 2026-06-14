@@ -939,3 +939,29 @@
         margin-right: 6px !important;
     }
 }
+
+@media (max-width: 768px) {
+    .search-results-header {
+        position: fixed !important;
+        top: auto !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 90% !important;
+        max-width: 350px !important;
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+        z-index: 9999 !important;
+        background: var(--bg-primary) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    }
+    
+    .search-result-item {
+        padding: 10px !important;
+    }
+    
+    .search-result-img {
+        width: 35px !important;
+        height: 35px !important;
+    }
+}
