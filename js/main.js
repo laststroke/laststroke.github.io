@@ -1975,4 +1975,41 @@ window.addEventListener('resize', function() {
     setTimeout(centerSearchAfterLogin, 100);
 });
 
+
+// ===== ФИКС ПОРЯДКА ЭЛЕМЕНТОВ В ШАПКЕ =====
+function fixHeaderOrder() {
+    const isMobile = window.innerWidth <= 768;
+    const logo = document.querySelector('.logo');
+    const headerSearch = document.querySelector('.header-search');
+    const userInfo = document.querySelector('.user-info-header');
+    const headerActions = document.querySelector('.header-actions');
+    
+    if (isMobile) {
+        if (logo) logo.style.order = '1';
+        if (userInfo) userInfo.style.order = '2';
+        if (headerActions) headerActions.style.order = '3';
+        if (headerSearch) {
+            headerSearch.style.order = '4';
+            headerSearch.style.width = '100%';
+            headerSearch.style.marginTop = '12px';
+        }
+    } else {
+        if (logo) logo.style.order = '1';
+        if (headerSearch) {
+            headerSearch.style.order = '2';
+            headerSearch.style.width = '';
+            headerSearch.style.marginTop = '';
+        }
+        if (userInfo) userInfo.style.order = '3';
+        if (headerActions) headerActions.style.order = '4';
+    }
+}
+
+setTimeout(fixHeaderOrder, 100);
+window.addEventListener('resize', function() { setTimeout(fixHeaderOrder, 50); });
+if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(function(user) { setTimeout(fixHeaderOrder, 200); });
+}
+
+
 });
