@@ -965,3 +965,65 @@
         height: 35px !important;
     }
 }
+
+/* ===== ФИКС ПОИСКА НА МОБИЛЬНЫХ ===== */
+@media (max-width: 768px) {
+    /* Фиксируем результаты поиска под строкой поиска */
+    .search-results-header {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        background: var(--bg-primary) !important;
+        border-radius: 12px !important;
+        margin-top: 5px !important;
+        z-index: 9999 !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* Контейнер поиска - относительное позиционирование */
+    .header-search {
+        position: relative !important;
+    }
+    
+    .search-wrapper {
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    
+    /* Результаты не должны вылезать за пределы */
+    .search-result-item {
+        padding: 10px 12px !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+    
+    .search-result-img {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 8px !important;
+    }
+    
+    .search-result-name {
+        font-size: 13px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+    
+    .search-result-category {
+        font-size: 11px !important;
+    }
+    
+    .search-result-price {
+        font-size: 12px !important;
+    }
+    
+    /* Затемнение фона при открытом поиске */
+    .search-results-header.active {
+        display: block !important;
+    }
+}
