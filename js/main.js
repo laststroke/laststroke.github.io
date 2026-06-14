@@ -621,7 +621,7 @@ function renderServicesPage() {
                     <h2>${escapeHtml(s.name)}</h2>
                     <p>${escapeHtml(s.description)}</p>
                     <ul>${featuresHtml}</ul>
-                    <div class="price-info">${escapeHtml(s.price)} руб.</div>
+                    <div class="price-info">${escapeHtml(s.price)}</div>
                     <button class="service-order-btn" data-service-id="${s.id}" onclick="event.stopPropagation();">
                         ${escapeHtml(s.orderButtonText || 'Заказать')}
                     </button>
@@ -1013,7 +1013,8 @@ async function registerUser(name, email, password) {
         return { success: false, error: 'invalid_email' };
     }
     if (!password || password.length < 6) {
-        showNotification('Пароль должен содержать минимум 6 символов', 'error');
+        // ИЗМЕНЕНО: показывает сколько символов введено
+        showNotification('Пароль должен содержать минимум 6 символов. Сейчас введено: ' + (password ? password.length : 0), 'error');
         return { success: false, error: 'weak_password' };
     }
     if (!name || name.trim().length < 2) {
@@ -1022,11 +1023,9 @@ async function registerUser(name, email, password) {
     }
     
     try {
-        // 1. Создаём пользователя в Authentication
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
         
-        // 2. Сохраняем данные в Firestore (коллекция users)
         await db.collection('users').doc(user.uid).set({
             name: name.trim(),
             email: email,
@@ -1041,7 +1040,6 @@ async function registerUser(name, email, password) {
         console.error('Registration error:', error);
         let message = 'Ошибка регистрации';
         
-        // Обработка различных ошибок Firebase
         if (error.code === 'auth/email-already-in-use') {
             message = 'Этот email уже зарегистрирован';
         } else if (error.code === 'auth/invalid-email') {
@@ -1056,7 +1054,6 @@ async function registerUser(name, email, password) {
         return { success: false, error: error.code };
     }
 }
-
 async function loginUser(email, password) {
     try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
@@ -1086,12 +1083,35 @@ function updateUserUI() {
     const logoutBtnHeader = document.getElementById('logoutBtnHeader');
     const userBtn = document.getElementById('userBtn');
     const adminBtn = document.getElementById('adminBtn');
+    
+    // ПОЛЯ ДЛЯ ОФОРМЛЕНИЯ ЗАКАЗА
+    const checkoutName = document.getElementById('checkoutName');
+    const checkoutEmail = document.getElementById('checkoutEmail');
+    
     if (currentUser) {
         if (userEmailDisplay) userEmailDisplay.textContent = currentUser.email;
         if (userInfoHeader) userInfoHeader.style.display = 'flex';
         if (logoutBtnHeader) logoutBtnHeader.style.display = 'flex';
         if (userBtn) userBtn.style.display = 'none';
         if (adminBtn) adminBtn.style.display = currentUser.email === 'laststroke@admin.ru' ? 'flex' : 'none';
+        
+        // ПОДСТАВЛЯЕМ ИМЯ И EMAIL В ФОРМУ ОФОРМЛЕНИЯ
+        if (checkoutName && checkoutName.value === '') {
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().name) {
+                    checkoutName.value = doc.data().name;
+                } else {
+                    checkoutName.value = currentUser.email.split('@')[0];
+                }
+            }).catch(() => {
+                checkoutName.value = currentUser.email.split('@')[0];
+            });
+        }
+        
+        if (checkoutEmail && checkoutEmail.value === '') {
+            checkoutEmail.value = currentUser.email;
+        }
+        
     } else {
         if (userInfoHeader) userInfoHeader.style.display = 'none';
         if (logoutBtnHeader) logoutBtnHeader.style.display = 'none';
@@ -1455,14 +1475,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('registerPassword').value = '';
     }
     });
-    document.getElementById('cartBtn')?.addEventListener('click', () => togglePanel('cartPanel'));
-    document.querySelector('.cart-close')?.addEventListener('click', closePanels);
-    document.getElementById('favoritesBtn')?.addEventListener('click', () => togglePanel('favoritesPanel'));
-    document.querySelector('.favorites-close')?.addEventListener('click', closePanels);
-    document.getElementById('menuBtn')?.addEventListener('click', () => togglePanel('mobileMenu'));
-    document.querySelector('.mobile-menu-close')?.addEventListener('click', closePanels);
-    document.getElementById('logoutBtnHeader')?.addEventListener('click', () => logoutUser());
-    
     document.getElementById('checkoutBtn')?.addEventListener('click', () => {
         if (cart.length === 0) { showNotification('Корзина пуста'); return; }
         if (!currentUser) {
@@ -1472,6 +1484,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         clearCheckoutForm();
         updateCheckoutSummary();
+        
+        // ПОДСТАВЛЯЕМ ИМЯ И EMAIL
+        const checkoutName = document.getElementById('checkoutName');
+        const checkoutEmail = document.getElementById('checkoutEmail');
+        
+        db.collection('users').doc(currentUser.uid).get().then(doc => {
+            if (doc.exists && doc.data().name) {
+                checkoutName.value = doc.data().name;
+            } else {
+                checkoutName.value = currentUser.email.split('@')[0];
+            }
+        }).catch(() => {
+            checkoutName.value = currentUser.email.split('@')[0];
+        });
+        
+        checkoutEmail.value = currentUser.email;
+        
         document.getElementById('checkoutModal')?.classList.add('active');
         document.getElementById('overlay')?.classList.add('active');
     });
