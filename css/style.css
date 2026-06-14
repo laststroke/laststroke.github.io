@@ -3319,3 +3319,9 @@ body {
         position: static !important;
     }
 }
+
+
+/* ===== ФИКС ПОИСКА ===== */
+.header-search {
+    transition: all 0.1s ease;
+}
