@@ -867,7 +867,7 @@ body {
 }
 .product-main-image {
     border-radius: 24px;
-    overflow: hidden;
+    overflow: visible;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     margin: 0;
@@ -3273,20 +3273,49 @@ body {
     box-shadow: 0 5px 15px rgba(201,126,74,0.3) !important;
 }
 
-/* ФИКС КЛИКАБЕЛЬНОСТИ КНОПОК НА МОБИЛЬНЫХ */
-.icon-btn,
-.menu-btn,
-.cart-btn,
-.favorites-btn,
-.user-btn,
-.admin-btn,
-.logout-btn-header {
-    cursor: pointer;
+/* ===== ФИКС КЛИКАБЕЛЬНОСТИ КНОПОК В ШАПКЕ ===== */
+.header-actions .icon-btn,
+.header-actions .menu-btn,
+.header-actions .user-btn,
+.header-actions .admin-btn,
+.header-actions .cart-btn,
+.header-actions .favorites-btn,
+.header-actions .logout-btn-header {
     pointer-events: auto !important;
-    z-index: 1000 !important;
+    cursor: pointer !important;
+    z-index: 1001 !important;
     position: relative !important;
 }
 
 .header-actions {
     pointer-events: auto !important;
+    z-index: 1001 !important;
+}
+
+.logo a {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 1001 !important;
+    position: relative !important;
+}
+
+.menu-btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 1001 !important;
+}
+
+
+
+/* ===== МОБИЛЬНЫЕ - КАРТИНКА СВЕРХУ ===== */
+@media (max-width: 768px) {
+    .product-detail {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .product-main-image img {
+        object-fit: contain !important;
+        position: static !important;
+    }
 }
