@@ -3257,3 +3257,18 @@ body {
     font-weight: 400;
     font-size: 16px;
 }
+
+/* ===== ВЫДЕЛЕННЫЕ КНОПКИ В КОРЗИНУ В КАТАЛОГЕ ===== */
+.product-add {
+    background: var(--accent) !important;
+    color: #1a120b !important;
+    border: none !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.product-add:hover {
+    background: var(--accent-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(201,126,74,0.3) !important;
+}
