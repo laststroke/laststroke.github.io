@@ -847,7 +847,7 @@ function loadServiceDetail() {
             </div>
             <div class="service-detail-info">
                 <h1>${escapeHtml(service.name)}</h1>
-                <div class="service-detail-price">${escapeHtml(service.price)} руб.</div>
+                <div class="service-detail-price">${escapeHtml(service.price)}</div>
                 <button class="btn-primary service-order-btn-detail" data-service-id="${service.id}">
                     ${escapeHtml(service.orderButtonText || 'Заказать')}
                 </button>
